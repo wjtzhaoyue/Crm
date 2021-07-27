@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao">
+<!--    在市场活动中 ，删除市场活动时候，在活动线索表中依据活动id删除 -->
+    <delete id="deleteByAids">
+        delete
+        from tbl_clue_activity_relation
+        where activityId in
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}<!--这里的cid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </delete>
+
+    <select id="getCountByAids" resultType="int">
+        select count(*)
+        from tbl_clue_activity_relation
+        where activityId in
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}<!--这里的cid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </select>
+
+
+
+
+    <!--    在线索中 ，删除线索时候，在活动线索表中依据线索id删除 -->
+    <delete id="deleteByCids">
+        delete
+        from tbl_clue_activity_relation
+        where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}<!--这里的cid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </delete>
+
+    <select id="getCountByCids" resultType="int">
+        select count(*)
+        from tbl_clue_activity_relation
+        where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}<!--这里的cid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </select>
+
+
+
+
+
+    <delete id="delete">
+        delete from tbl_clue_activity_relation where  id=#{id}
+    </delete>
+    <select id="getListByClueId" resultType="ClueActivityRelation">
+        select * from  tbl_clue_activity_relation where  clueId=#{clueId};
+    </select>
+    <insert id="guanlian" >
+        insert  into tbl_clue_activity_relation (id,activityId,clueId)
+        values (#{id},#{activityId},#{clueId})
+    </insert>
+
+    <delete id="unbind" >
+        delete from tbl_clue_activity_relation
+        where  id=#{id}
+    </delete>
+  	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

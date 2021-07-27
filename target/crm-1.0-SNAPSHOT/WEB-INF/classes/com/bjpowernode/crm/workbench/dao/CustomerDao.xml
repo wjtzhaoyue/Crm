@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjpowernode.crm.workbench.dao.CustomerDao">
+    <delete id="delete" >
+        delete
+        from tbl_customer
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}<!--这里的aid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </delete>
+    <select id="getCountByIds" resultType="int">
+        select count(*)
+        from tbl_customer
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}<!--这里的aid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </select>
+    <select id="getDetailCustomerByIdDetail" resultType="Customer">
+        select
+        c.id,
+        u.name as owner,
+        c.name,
+        c.website,
+        c.phone,
+        c.createBy,
+        c.createTime,
+        c.editBy,
+        c.editTime,
+        c.contactSummary,
+        c.nextContactTime,
+        c.description,
+        c.address
+
+        from tbl_customer c
+        left join tbl_user u
+        on c.owner=u.id
+
+        where c.id=#{id}
+
+    </select>
+
+
+    <update id="update" >
+        update tbl_customer set
+        owner=#{owner},
+        name=#{name},
+        website=#{website},
+        phone=#{phone},
+        editBy=#{editBy},
+        editTime=#{editTime},
+        contactSummary=#{contactSummary},
+        nextContactTime=#{nextContactTime},
+        description=#{description},
+        address=#{address}
+        where id=#{id}
+
+    </update>
+
+    <select id="getCustomerById" resultType="Customer">
+  select  * from  tbl_customer where id=#{id}
+    </select>
+
+    <select id="getCustomerListByCondition" resultType="Customer">
+         select
+         c.id,
+         c.name,
+         u.name as owner,
+         c.phone,
+         c.website
+
+        from tbl_customer c
+        left join tbl_user u
+        on c.owner=u.id
+        <where>
+            <if test="name != null and name !=''" >
+                c.name like '%' #{name} '%'
+            </if >
+            <if test="owner != null and owner != ''">            <!--like前面的为从数据库中。sql语句后紧跟着”select“选出来的列名-->
+                <!--要看懂下面这一行的u，name！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！-->
+                and u.name like '%' #{owner} '%'           <!--   这里的#{}对应前端传过来的数据名称-->
+
+            </if>
+            <if  test="phone!= null and phone != ''">
+                and  c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website!= null and website != ''">
+                and  c.website like '%' #{website} '%'
+            </if>
+
+        </where>
+        order  by c.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+        from tbl_customer c
+        left join tbl_user u
+        on c.owner=u.id
+        <where>
+            <if test="name != null and name !=''" >
+                c.name like '%' #{name} '%'
+            </if >
+            <if test="owner != null and owner != ''">            <!--like前面的为从数据库中。sql语句后紧跟着”select“选出来的列名-->
+                <!--要看懂下面这一行的u，name！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！-->
+                and u.name like '%' #{owner} '%'           <!--   这里的#{}对应前端传过来的数据名称-->
+            </if>
+            <if  test="phone!= null and phone != ''">
+                and  c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website!= null and website != ''">
+                and  c.website like '%' #{website} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getCustomerName" resultType="String">
+        select name from tbl_customer where name like '%' #{name} '%'
+    </select>
+
+    <insert id="save" >
+        insert into  tbl_customer
+        (
+        id,
+        owner,
+        name,
+        website,
+        phone,
+        createBy,
+        createTime,
+        contactSummary,
+        nextContactTime,
+        description,
+        address
+
+        ) values (
+#{id},
+#{owner},
+#{name},
+#{website},
+#{phone},
+#{createBy},
+#{createTime},
+#{contactSummary},
+#{nextContactTime},
+#{description},
+#{address}
+        );
+    </insert>
+
+    <select id="getCustomerByName" resultType="Customer">
+        select  * from tbl_customer where  name=#{name}
+    </select>
+	
+  	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

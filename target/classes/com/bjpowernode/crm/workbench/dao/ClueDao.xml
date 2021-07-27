@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjpowernode.crm.workbench.dao.ClueDao">
+    <select id="getCharts" resultType="map">
+        select
+        count(*) as value,state as name
+        from tbl_clue
+        group  by state
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count(*)  from tbl_clue
+    </select>
+    <delete id="deleteNoConvert">
+        delete
+        from tbl_clue
+        where id in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}<!--这里的cid随便起名字，但是为了方便看懂，最好还是按照一定意义去写-->
+        </foreach>
+    </delete>
+    <delete id="delete">
+        delete from tbl_clue where id=#{id}
+    </delete>
+    <select id="getById" resultType="Clue">
+        select * from tbl_clue where id=#{id}
+    </select>
+    <update id="update" >
+        update tbl_clue set
+fullname=#{fullname},
+appellation=#{appellation},
+owner=#{owner},
+company=#{company},
+job=#{job},
+email=#{email},
+phone=#{phone},
+website=#{website},
+mphone=#{mphone},
+state=#{state},
+source=#{source},
+editBy=#{editBy},
+editTime=#{editTime},
+description=#{description},
+contactSummary=#{contactSummary},
+nextContactTime=#{nextContactTime},
+address=#{address}
+
+ where id=#{id}
+
+
+
+    </update>
+
+    <select id="getSingleClue" resultType="Clue">
+        select * from tbl_clue c where id=#{idd}
+    </select>
+
+    <select id="getClueListByCondition" resultType="Clue">
+         select
+         c.id,
+         c.fullname,
+         c.appellation,
+         c.company,
+         c.phone,
+         c.source,
+         u.name as owner,
+         c.mphone,
+         c.state
+
+         from tbl_clue c
+         join tbl_user u
+         on c.owner=u.id
+
+        <where>
+            <if test="fullname != null and fullname !=''" >
+                c.fullname like '%' #{fullname} '%'
+            </if >
+            <if test="company != null and company != ''">            <!--like前面的为从数据库中。sql语句后紧跟着”select“选出来的列名-->
+                <!--要看懂下面这一行的u，name！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！-->
+                and c.company like '%' #{company} '%'           <!--   这里的#{}对应前端传过来的数据名称-->
+
+            </if>
+            <if  test="phone!= null and phone != ''">
+                and  c.phone like '%' #{phone} '%'
+            </if>
+            <if test="source!= null and source != ''">
+                and  c.source like '%' #{source} '%'
+            </if>
+            <if test="owner!= null and owner != ''">
+                and  u.name like '%' #{owner} '%'
+            </if>
+            <if test="mphone!= null and mphone != ''">
+                and  c.mphone like '%' #{mphone} '%'
+            </if>
+            <if test="state!= null and state != ''">
+                and  c.state like '%' #{state} '%'
+            </if>
+
+        </where>
+
+        order  by c.createTime desc
+        limit #{skipCount},#{pageSize}
+
+    </select>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+
+        from tbl_clue c
+        join tbl_user u
+        on c.owner=u.id
+        <where>
+            <if test="fullname != null and fullname !=''" >
+                c.fullname like '%' #{fullname} '%'
+            </if >
+
+            <if test="company != null and company != ''">            <!--like前面的为从数据库中。sql语句后紧跟着”select“选出来的列名-->
+                <!--要看懂下面这一行的u，name！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！-->
+                and c.company like '%' #{company} '%'           <!--   这里的#{}对应前端传过来的数据名称-->
+            </if>
+
+            <if  test="phone!= null and phone != ''">
+                and  c.phone like '%' #{phone} '%'
+            </if>
+
+            <if test="source!= null and source != ''">
+                and  c.source like '%' #{source} '%'
+            </if>
+
+            <if test="owner!= null and owner != ''">
+                and  u.name like '%' #{owner} '%'
+            </if>
+
+            <if test="mphone!= null and mphone != ''">
+                and  c.mphone like '%' #{mphone} '%'
+            </if>
+
+            <if test="state!= null and state != ''">
+                and  c.state like '%' #{state} '%'
+            </if>
+
+        </where>
+    </select>
+
+
+
+<!--  这里是为信息列表查询详细信息，涉及到了owner这个特殊的展示为中文名字，所以sql要特殊写，联合好几张表
+     其中的where为条件，即在where条件下，查询
+     -->
+    <select id="detail" resultType="Clue">
+        select
+        c.id,
+        c.fullname,
+        c.appellation,
+        u.name as owner,
+        c.company,
+        c.job,
+        c.email,
+        c.phone,
+        c.website,
+        c.mphone,
+        c.state,
+        c.source,
+        c.createBy,
+        c.createTime,
+        c.description,
+        c.contactSummary,
+        c.nextContactTime,
+        c.address
+
+
+        from tbl_clue c
+        join tbl_user u
+        on c.owner=u.id
+
+        where c.id=#{id}
+
+    </select>
+
+    <insert id="save" >
+        insert  into tbl_clue(
+            id,
+            fullname,
+            appellation,
+            owner,
+            company,
+            job,
+            email,
+            phone,
+            website,
+            mphone,
+            state,
+            source,
+            createBy,
+            createTime,
+            description,
+            contactSummary,
+            nextContactTime,
+            address
+                    )
+                    values(
+            #{id},
+            #{fullname},
+            #{appellation},
+            #{owner},
+            #{company},
+            #{job},
+            #{email},
+            #{phone},
+            #{website},
+            #{mphone},
+            #{state},
+            #{source},
+            #{createBy},
+            #{createTime},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime},
+            #{address}
+
+        )
+
+    </insert>
+	
+	
+  	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

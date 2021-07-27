@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpowernode.crm.workbench.dao.TranRemarkDao">
+    <!--    下面这个delete传入的ids是交易的id-->
+    <delete id="deleteByIds" >
+        delete from tbl_tran_remark
+        where tranId in
+        <foreach collection="array" item="tranId" open="(" close=")" separator=",">
+            #{tranId}
+        </foreach>
+    </delete>
+    <select id="getTotalByIds" resultType="int">
+        select count(*)
+        from tbl_tran_remark
+        where tranId in
+        <foreach collection="array" item="tranId" open="(" close=")" separator=",">
+            #{tranId}
+        </foreach>
+    </select>
+<!--    下面这个delete传入的id是备注的id-->
+    <delete id="deleteById" >
+        delete from tbl_tran_remark
+         where id=#{id}
+    </delete>
+    <update id="updateRemark" >
+         update  tbl_tran_remark
+         set noteContent=#{noteContent},editTime=#{editTime},editBy=#{editBy},editFlag=#{editFlag}
+        where  id=#{id}
+    </update>
+    <select id="getRemarkListByTid" resultType="TranRemark">
+         select * from tbl_tran_remark where tranId=#{trrid}
+    </select>
+    <insert id="saveRemark">
+        insert  into tbl_tran_remark(
+        id,
+        noteContent,
+        createTime,
+        createBy,
+        editFlag,
+        tranId
+        )
+        values (
+        #{id},
+        #{noteContent},
+        #{createTime},
+        #{createBy},
+        #{editFlag},
+        #{tranId}
+        )
+    </insert>
+
+</mapper>
