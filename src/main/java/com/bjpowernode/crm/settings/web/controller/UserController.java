@@ -63,8 +63,8 @@ public class UserController extends HttpServlet {
             String msg=e.getMessage();
             //这时候，需要将登陆失败的 和 异常 这 两个信息传到前端ajax
            // 方法有两种：1 使用map ，将map'解析为json
-               //        2 使用ov即创建新的组合类型对象，将需要传过去的信息组装为一个对象
-            //  选择的时候，我们考虑是否会经常使用，若是经常使用我们就创建ov
+               //        2 使用vo即创建新的组合类型对象，将需要传过去的信息组装为一个对象
+            //  选择的时候，我们考虑是否会经常使用，若是经常使用我们就创建vo
             //否则就使用map，要不然会浪费空间
             Map<String ,Object> map=new HashMap<String, Object>();
             map.put("success",false);//这行可以不写

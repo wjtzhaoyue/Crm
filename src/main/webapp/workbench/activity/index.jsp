@@ -50,7 +50,7 @@ String basePath =request.getScheme() +"://" + request.getServerName() + ":" + re
                     var id="${user.id}"
 					$.each(data,function (i,n) {
 
-						if(n.id==id){//////////////疑问为什么这里== 可以判断数据库中的字符串/////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						if(n.id==id){//////////////疑问为什么这里== 可以判断数据库中的字符串/////////////!!!!!
 							html=html+" <option value=' "+n.id +" ' selected > "+n.name+" </option>"
 						}
 
