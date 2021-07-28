@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DicServiceImpl implements DicService {
+
     private DicTypeDao dicTypeDao= SqlSessionUtil.getSqlSession().getMapper(DicTypeDao.class);
     private DicValueDao dicValueDao= SqlSessionUtil.getSqlSession().getMapper(DicValueDao.class);
 

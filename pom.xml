@@ -82,6 +82,7 @@
         </configuration>
       </plugin>
     </plugins>
+
     <resources>
       <resource>
         <directory>src/main/java</directory><!--所在的目录-->
@@ -89,7 +90,7 @@
           <include>**/*.properties</include>
           <include>**/*.xml</include>
         </includes>
-        <filtering>false</filtering>
+        <filtering>true</filtering>
       </resource>
     </resources>
   </build>
